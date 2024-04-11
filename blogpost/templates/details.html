@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Index</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.tiny.cloud/1/cgndgswafvzu4hll7h6uajr6jk4ujwcq1wyv53vpup0ajuzc/tinymce/7/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+  </head>
+  <body>
+    <br />
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <h5>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+            </h5>
+            <h5>
+              <li class="nav-item">
+                <a class="nav-link" href="/add">Add Blog </a>
+              </li>
+            </h5>
+            <h5>
+              <li class="nav-item">
+                <a class="nav-link" href="/tag">Add Tag </a>
+              </li>
+            </h5>
+            <h5>
+              <li class="nav-item">
+                <a class="nav-link" href="/latestblog">Latest Blog</a>
+              </li>
+            </h5>
+            <h5>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin">Admin</a>
+              </li>
+            </h5>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="header" style="text-align: center">{{ blog.title }}</h1>
+      <br />
+      <h5>{{ blog.pub_date }}</h5>
+      <table>
+        <tr>
+          <td>Tag:</td>
+          <td>
+            {% for tag in blog.tag_title.all %}
+            <button type="button" class="btn btn-outline-secondary">
+              {{ tag.tag_title }}
+            </button>
+            {% endfor %}
+          </td>
+        </tr>
+      </table>
+      <br />
+      <center>
+        <img
+          src="{{ blog.blog_image.url }}"
+          alt="Card image cap"
+          style="width: 70%"
+        />
+      </center>
+      <br /><br />
+      <h4>{{ blog.description | safe }}</h4>
+      <br />
+      <table>
+        <tr>
+          <td><h5>{{ blog.author_name }}</h5></td>
+          <td><h5>{{ blog.email }}</h5></td>
+        </tr>
+      </table>
+      <br />
+
+      <!-- Comment Form -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Comment</h5>
+          <form action="{% url 'details' id=blog.id %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="name"> Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="email"> Email:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="comment">Comment:</label>
+              <textarea
+                class="form-control"
+                id="comment"
+                name="comment"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        {% if comments %}
+        <h2>Comments:</h2>
+        <ul class="list-unstyled">
+          {% for comment in comments %}
+          <li>
+            <div class="card w-75" style="background-color: lightblue">
+              <div class="card-body">
+                <div class="row g-0">
+                  <div class="col-sm-6 col-md-8">{{ comment.name }}</div>
+                  <div class="col-6 col-md-4">{{comment.created_at}}</div>
+                </div>
+                <h6>{{ comment.email }}</h6>
+                &nbsp;&nbsp;&nbsp;&nbsp; {{ comment.comments }}
+              </div>
+            </div>
+            <br />
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
